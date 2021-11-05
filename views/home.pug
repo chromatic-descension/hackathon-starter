@@ -2,11 +2,15 @@ extends layout
 
 block content
   script(src='/js/lib/jquery.min.js')
-  script(src='/js/home.js')
+  script(type='module' src='/js/home.js')
 
 
   h1 Neural Art Transfer
   p.lead Turn your photos into works of art
   hr
   include partials/triptych
-  div#image-row-wrapper
+  div.row
+    #imageColumn0.col-md-3.image-column
+    #imageColumn1.col-md-3.image-column
+    #imageColumn2.col-md-3.image-column
+    #imageColumn3.col-md-3.image-column

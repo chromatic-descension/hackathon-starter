@@ -1,5 +1,5 @@
 /**
- * GET /
+ * GET /randomImage
  * Random image.
  */
 

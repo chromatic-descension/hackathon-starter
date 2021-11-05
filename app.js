@@ -76,7 +76,11 @@ app.use(sass({
   src: path.join(__dirname, 'public'),
   dest: path.join(__dirname, 'public')
 }));
-app.use(logger('dev'));
+app.use(logger('dev', {
+  skip: (req, res) => {
+    return (req.url == '/convertStatus');
+  }
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
@@ -155,6 +159,8 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
  * Tools
  */
 app.get('/create', createController.getCreate);
+app.post('/convertRandom', createController.postConvertRandom);
+app.post('/convertStatus', createController.postConvertStatus);
 
 /**
  * Image routes.

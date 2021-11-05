@@ -4,22 +4,29 @@ const { v4: uuidv4 } = require('uuid');
 const getDb = require('../utils/db');
 const COMMAND_RUNNER = require('./command_runner');
 
+const fixPath = require('../utils/fixPath');
+
 const OUTPUT_PATH = '/home/lucas/art/crazy/output';
 const SCALE = 400;
 
-const CONVERT_LISTENER = require('./convert_listener');
-
-
 class Backend {
-    constructor() {}
+    constructor() {
+        this.lastRandomContent = null;
+        this.lastRandomStyle = null;
+        this.lastRandomOutput = null;
+    }
 
     async transformRandomImages() {
         const outputName = `${uuidv4()}.jpg`;
         const outputPath = `${OUTPUT_PATH}/${outputName}`;
+        this.lastRandomOutput = outputName;
 
         const scale = SCALE;
         const style = await this.getRandomStyle();
+        this.lastRandomStyle = fixPath.getStylePath(style.path);
+        
         const content = await this.getRandomContent();
+        this.lastRandomContent = fixPath.getContentPath(content.path);
 
         const success = await COMMAND_RUNNER.transformImage(content.path, style.path, outputPath, scale);
         if (!success) return false;

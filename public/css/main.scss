@@ -37,14 +37,39 @@ footer {
 
 // Image Art Stuff
 
+.image-column {
+  height: 90%;
+}
+
 .image-card {
   padding: 8px;
+  object-fit: cover;
+  width: 100%;
+  height: auto;
 }
 
 .image-card-text {
   font-size: 12px;
   text-align: right;
   padding: 6px;
+}
+
+.modal {
+  padding: 0 !important; // override inline padding-right added from js
+}
+.modal .modal-dialog {
+  width: 100%;
+  max-width: none;
+  height: 90%;
+  margin: 0;
+}
+.modal .modal-content {
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+}
+.modal .modal-body {
+  overflow-y: auto;
 }
 
 // Input Fields

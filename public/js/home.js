@@ -1,3 +1,5 @@
+import {showTriptych} from './triptych.js';
+
 /* eslint-env jquery, browser */
 $(document).ready(() => {
 
@@ -25,12 +27,21 @@ function getRandomImage() {
 }
 
 function addImage(image) {
-  const col = $('<div/>').addClass('col-md-4').append(image);
-  const row = nextImageRow();
-  row.append(col);
+  const count = $('.image-column').length;
+  let lowestCol = null;
+  let lowestY = Infinity;
+  for (let i=0; i<count; i++ ){
+    const col = $(`#imageColumn${i}`);
+    const bottom = col.get(0).getBoundingClientRect().bottom;
+    if (bottom < lowestY) {
+      lowestY = bottom;
+      lowestCol = col;
+    }
+  }
+  lowestCol.append(image);
 
-  col.on('click', ()=>{
-    const img = col.find('img');
+  $(image).on('click', ()=>{
+    const img = $(image).find('img');
     const outputImage = img.data('output-image');
     const styleImage = img.data('style-image');
     const contentImage = img.data('content-image');
@@ -41,29 +52,9 @@ function addImage(image) {
 function nextImageRow() {
   const wrapper = $('#image-row-wrapper');
   if (wrapper.children().length === 0 || wrapper.children().last().children().length >= 3) {
-    const row = ($('<div/>').addClass('row'));
+    const row = ($('<div/>').addClass('row').addClass('image-row'));
     wrapper.append(row);
     return row;
   }
   return wrapper.children().last();
-}
-
-function showTriptych(outputImage, styleImage, contentImage) {
-  trip = $('#triptych');
-
-  // Set the images.
-  images = trip.find('img');
-  $(images[0]).attr('src', contentImage);
-  $(images[1]).attr('src', styleImage);
-  $(images[2]).attr('src', outputImage);
-
-  // Set the label to the artist name.
-  try {
-    console.log(styleImage);
-    const artistName = styleImage.split('/')[2].replace('_',' ');
-    $("#triptychLabel").text(artistName);
-  } finally {}
-
-  trip.modal('handleUpdate');
-  trip.modal();
 }
