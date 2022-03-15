@@ -1,28 +1,28 @@
-import {showTriptych} from './triptych.js';
+import { showTriptych } from './triptych.js';
 
 /* eslint-env jquery, browser */
 $(document).ready(() => {
-
-  window.onscroll = function() {
+  getRecentOutputs();
+  window.onscroll = async () => {
     if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight) {
-     getRandomImage();
+      await getNextRenderedOutput(recentOutputIndex++);
     }
-   }
-
-  for (let i = 0; i < 15; i++) {
-    getRandomImage();
   }
 });
 
+let recentOutputs = null;
+let recentOutputIndex = 0;
 
-function getRandomImage() {
-  fetch('/randomImage').then((response) => {
-    return response.text();
-  }).then((html) => {
-    const image = new DOMParser().parseFromString(html, 'text/html').querySelector('body > :first-child');
-    addImage(image);
-  }).catch((err) => {
-    console.warn('Something went wrong.', err);
+function getRecentOutputs() {
+  $.ajax({
+    url: '/recentOutputs',
+    type: 'POST',
+    success: async (data) => {
+      recentOutputs = data;
+      for (let i = 0; i < 20; i++) {
+        await getNextRenderedOutput(recentOutputIndex++);
+      }
+    }
   });
 }
 
@@ -30,7 +30,7 @@ function addImage(image) {
   const count = $('.image-column').length;
   let lowestCol = null;
   let lowestY = Infinity;
-  for (let i=0; i<count; i++ ){
+  for (let i = 0; i < count; i++) {
     const col = $(`#imageColumn${i}`);
     const bottom = col.get(0).getBoundingClientRect().bottom;
     if (bottom < lowestY) {
@@ -40,7 +40,7 @@ function addImage(image) {
   }
   lowestCol.append(image);
 
-  $(image).on('click', ()=>{
+  $(image).on('click', () => {
     const img = $(image).find('img');
     const outputImage = img.data('output-image');
     const styleImage = img.data('style-image');
@@ -49,12 +49,16 @@ function addImage(image) {
   });
 }
 
-function nextImageRow() {
-  const wrapper = $('#image-row-wrapper');
-  if (wrapper.children().length === 0 || wrapper.children().last().children().length >= 3) {
-    const row = ($('<div/>').addClass('row').addClass('image-row'));
-    wrapper.append(row);
-    return row;
-  }
-  return wrapper.children().last();
+async function getNextRenderedOutput(index) {
+  if (recentOutputs == null || index >= recentOutputs.length) return null;
+
+  await fetch('/outputImage?' + new URLSearchParams({fileName: recentOutputs[index]}))
+    .then((response) => {
+      return response.text();
+    }).then((html) => {
+      const image = new DOMParser().parseFromString(html, 'text/html').querySelector('body > :first-child');
+      addImage(image);
+    }).catch((err) => {
+      console.warn('Something went wrong.', err);
+    });
 }

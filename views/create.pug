@@ -20,8 +20,15 @@ block content
           )
           div#randomImageText.image-card-text
           button#randomImageButton.btn.btn.btn-primary
-            i.fas.fa-random.fa-sm
+            #randomImageButtonLoadingIcon.spinner-border.spinner-border-sm(role='status')
+              span.sr-only Loading...
+            i#randomImageButtonWaitingIcon.fas.fa-random.fa-sm
             | Create Random Image
+      p.lead
+        | AutoConvert
+        span.toggleButton
+          input#autoConvertToggle(type='checkbox' data-toggle='toggle' data-onstyle="success")
+
   hr
   p Future button will be really cool in some time.
   div.row

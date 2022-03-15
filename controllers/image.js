@@ -1,30 +1,47 @@
+const moment = require('moment');
+
+const backend = require('../backend/backend');
+const getDb = require('../utils/db');
+const fixPath = require('../utils/fixPath');
+
 /**
  * GET /randomImage
  * Random image.
  */
-
-const moment = require('moment');
-const getDb = require('../utils/db');
-
-exports.randomImage = async (req, res) => {
-  const db = await getDb();
-  const image = await db.collection('outputImages').aggregate([{ '$sample': { size: 1 } }]).next();
-
-  res.render('partials/image', {
-    outputImage: `/outputImages/${image.fileName}`,
-    dateCreated: `Created ${moment(image._id.getTimestamp()).format('LL')}`,
-    styleImage: getStylePath(image.stylePath),
-    contentImage: getContentPath(image.contentPath),
-  });
+exports.getRandomImage = async (req, res) => {
+  const image = await backend.getRandomOutput();
+  res.render('partials/image', packageOutput(image));
 };
 
-function getContentPath(fullPath) {
-  const contentName = fullPath.replace(/^.*[\\\/]/, '');
-  return `/contentImages/${contentName}`;
-}
+/**
+ * GET /outputImage
+ * Get a rendered output image.
+ */
+exports.getOutputImage = async (req, res) => {
+  const fileName = req.query.fileName;
+  const image = await backend.getOutputImage(fileName);
+  if (image) {
+    res.render('partials/image', packageOutput(image));
+  } else {
+    res.sendStatus(404);
+  }
+};
 
-function getStylePath(fullPath) {
-  const styleParts = fullPath.split('/');
-  const nParts = styleParts.length;
-  return `/styleImages/${styleParts[nParts-2]}/${styleParts[nParts-1]}`;
+/**
+ * POST /recentOutputs
+ * Get the most recent output image details.
+ */
+exports.getRecentOutputs = async (req, res) => {
+  const outputs = await backend.getMostRecentOutputs();
+  res.send(outputs.map(output => output.fileName)); 
+};
+
+function packageOutput(image) {
+  return {
+    // dateCreated: `Created ${moment(image._id.getTimestamp()).format('LL')}`,
+    dateCreated: `Created ${moment(image._id.getTimestamp()).fromNow()}`,
+    outputImage: fixPath.getOutputPath(image),
+    styleImage: fixPath.getStylePath(image),
+    contentImage: fixPath.getContentPath(image),
+  };
 }

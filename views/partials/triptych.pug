@@ -5,17 +5,17 @@
         h5#triptychLabel.modal-title Name of the piece?
         button.close(type='button' data-dismiss='modal' aria-label='Close')
           span(aria-hidden='true') &times;
-      .modal-body
+      #triptych-body.modal-body
         .row
-          .col-lg-4
-            .card-body.container.d-flex.h-100
-              img.card-img-top.align-self-center(width='100%' height='auto')
-          .col-lg-4
-            .card-body.container.d-flex.h-100
-              img.card-img-top.align-self-center(width='100%' height='auto')
-          .col-lg-4
-            .card-body.container.d-flex.h-100
-              img.card-img-top.align-self-center(width='100%' height='auto')
+          .col-lg-2
+            .triptych-img
+              img.triptych-fake-img
+          .col-lg-8
+            .triptych-img
+              img.triptych-fake-img
+          .col-lg-2
+            .triptych-img
+              img.triptych-fake-img
         .row
       .modal-footer
         button.btn.btn-secondary(type='button' data-dismiss='modal') Close

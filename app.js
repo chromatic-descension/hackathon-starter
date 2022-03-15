@@ -161,11 +161,14 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 app.get('/create', createController.getCreate);
 app.post('/convertRandom', createController.postConvertRandom);
 app.post('/convertStatus', createController.postConvertStatus);
+app.post('/autoConvert', createController.postAutoConvert);
 
 /**
  * Image routes.
  */
-app.get('/randomImage', imageController.randomImage);
+app.get('/randomImage', imageController.getRandomImage);
+app.get('/outputImage', imageController.getOutputImage);
+app.post('/recentOutputs', imageController.getRecentOutputs);
 
 app.use('/contentImages', express.static(path.join(__dirname, '../content')));
 app.use('/styleImages', express.static(path.join(__dirname, '../art/painting/images/images')));

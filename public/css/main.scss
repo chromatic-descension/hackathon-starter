@@ -46,6 +46,7 @@ footer {
   object-fit: cover;
   width: 100%;
   height: auto;
+  max-height: 400px;
 }
 
 .image-card-text {
@@ -54,22 +55,40 @@ footer {
   padding: 6px;
 }
 
-.modal {
-  padding: 0 !important; // override inline padding-right added from js
+// Triptych
+.modal-xl {
+  max-width: 90%;
 }
-.modal .modal-dialog {
-  width: 100%;
-  max-width: none;
-  height: 90%;
-  margin: 0;
-}
-.modal .modal-content {
+
+.modal-body {
   height: 100%;
-  border: 0;
-  border-radius: 0;
+  width: 100%;
 }
-.modal .modal-body {
-  overflow-y: auto;
+
+.triptych-img {
+  height: 1000px;
+  max-width: 100%;
+  max-height: 100%;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+.triptych-fake-img {
+  opacity: 0;
+  min-height: 100%;
+  min-width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+}
+
+// Create page
+#randomImageButtonLoadingIcon {
+  margin-right: 5px;
+}
+
+.toggleButton {
+  margin-left: 6px;
+  margin-right: 6px;
 }
 
 // Input Fields
